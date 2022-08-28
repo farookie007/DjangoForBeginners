@@ -5,7 +5,7 @@ from .models import Post
 
 # Create your tests here.
 
-class PostModelTest(TestCase):
+class PostModelTests(TestCase):
     post_text = "Pls, work."
     
     def setUp(self):
@@ -24,13 +24,21 @@ class PostModelTest(TestCase):
         self.assertEqual(type(content), type(''))
 
 
-class HomePageTests(TestCase):
+class HomePageViewTests(TestCase):
     def test_url_exists(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
+    
+    def test_url_exists_by_name(self):
+        resp = self.client.get('/')
+        self.assertEqual(resp.status_code, 200)
 
 
-class AboutPageTests(SimpleTestCase):
+class AboutPageViewTests(SimpleTestCase):
     def test_url_exists(self):
         response = self.client.get(reverse('about'))
         self.assertEqual(response.status_code, 200)
+    
+    def test_url_exists_by_name(self):
+        resp = self.client.get('/about/')
+        self.assertEqual(resp.status_code, 200)
