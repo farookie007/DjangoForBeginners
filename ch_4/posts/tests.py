@@ -7,22 +7,20 @@ from .models import Post
 # Create your tests here.
 
 class PostModelTests(TestCase):
-    post_text = "Pls, work."
+    post_texts = ["Testing 1", "Testing 2", "Testing 3", "Testing 4", "Testing 5", "Pls, work."]
     
     def setUp(self):
-        Post.objects.create(text=self.post_text)
-
-    def get_post_content(self):
-        post = Post.objects.get(id=1)
-        return post.text
+        for text in self.post_texts:
+            Post.objects.create(text=text)
     
     def test_object_content(self):
-        content = self.get_post_content()
-        self.assertEqual(content, self.post_text)
+        for i, post in enumerate(Post.objects.all()):
+            self.assertEqual(self.post_texts[i], post.text)
     
     def test_object_type(self):
-        content = self.get_post_content()
-        self.assertEqual(type(content), type(''))
+        for post in Post.objects.all():
+            self.assertEqual(type(post.text), type(''))
+
         
 
 class HomePageViewTests(TestCase):
@@ -40,39 +38,53 @@ class HomePageViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_url_exists_by_location(self):
+        # test for the url status code from the url route
         resp = self.client.get(self.url_location)
         self.assertEqual(resp.status_code, 200)
 
     def test_view_map_correct_template(self):
+        # test if the 'view_name` maps to the correct template`
         url = self._generate_reverse_url()
         resp = self.client.get(reverse(url))
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, self.template_path)
-
-                
     
+    def test_location_match_view(self):
+        # test if the `view_name` and `url_location` points to the same view and route
+        url = self._generate_reverse_url()
+        resp = self.client.get(self.url_location)
+        self.assertTemplateUsed(resp, self.template_path)
+        resp = self.client.get(reverse(url))
+        self.assertTemplateUsed(resp, self.template_path)
 
-
-class AboutPageViewTests(TestCase):
+class AboutPageViewTests(HomePageViewTests):
+    """This test class inherits from HomePageViewTests class since they share similar features"""
     app_name = None
     view_name = 'about'
     template_path = 'posts/about.html'
     url_location = '/about/'
+                
+    
+# class AboutPageViewTests(TestCase):
+#     app_name = None
+#     view_name = 'about'
+#     template_path = 'posts/about.html'
+#     url_location = '/about/'
 
-    def _generate_reverse_url(self):
-        return f"{self.app_name + ':' if self.app_name else ''}{self.view_name}"
+#     def _generate_reverse_url(self):
+#         return f"{self.app_name + ':' if self.app_name else ''}{self.view_name}"
 
-    def test_url_exists_by_name(self):
-        url = self._generate_reverse_url()
-        response = self.client.get(reverse(url))
-        self.assertEqual(response.status_code, 200)
+#     def test_url_exists_by_name(self):
+#         url = self._generate_reverse_url()
+#         response = self.client.get(reverse(url))
+#         self.assertEqual(response.status_code, 200)
 
-    def test_url_exists_by_location(self):
-        resp = self.client.get(self.url_location)
-        self.assertEqual(resp.status_code, 200)
+#     def test_url_exists_by_location(self):
+#         resp = self.client.get(self.url_location)
+#         self.assertEqual(resp.status_code, 200)
 
-    def test_view_map_correct_template(self):
-        url = self._generate_reverse_url()
-        resp = self.client.get(reverse(url))
-        self.assertEqual(resp.status_code, 200)
-        self.assertTemplateUsed(resp, self.template_path)
+#     def test_view_map_correct_template(self):
+#         url = self._generate_reverse_url()
+#         resp = self.client.get(reverse(url))
+#         self.assertEqual(resp.status_code, 200)
+#         self.assertTemplateUsed(resp, self.template_path)

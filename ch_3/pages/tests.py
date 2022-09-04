@@ -5,11 +5,19 @@ from django.urls import reverse
 # Create your tests here.
 class HomeTests(SimpleTestCase):
     def test_url_exists_at_current_location(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+    
+    def test_page_status_code(self):
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
 
 
 class AboutTests(SimpleTestCase):
     def test_url_exists_at_current_location(self):
+        response = self.client.get('/about/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_page_status_code(self):
         response = self.client.get(reverse('about'))
         self.assertEqual(response.status_code, 200)
