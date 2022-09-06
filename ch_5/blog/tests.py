@@ -98,7 +98,7 @@ class BlogListViewTests(TestCase):
 class BlogDetailViewTests(BlogListViewTests):
     """This test class inherits from BlogListViewTests class since they share similar methods. It also checks the detail view of the Post model"""
     app_name = None
-    view_name = 'post'
+    view_name = 'post_detail'
     template_path = 'blog/post_detail.html'
     url_kwargs = {'pk': 1}
     post = {
