@@ -29,12 +29,14 @@ class HomePageViewTests(TestCase):
     template_path = 'posts/home.html'
     url_location = '/'
 
+    def setUp(self):
+        self.reverse_url = self._generate_reverse_url()     # generates the reverse url for the `view_name`
+
     def _generate_reverse_url(self):
         return f"{self.app_name + ':' if self.app_name else ''}{self.view_name}"
 
     def test_url_exists_by_name(self):
-        url = self._generate_reverse_url()
-        response = self.client.get(reverse(url))
+        response = self.client.get(reverse(self.reverse_url))
         self.assertEqual(response.status_code, 200)
 
     def test_url_exists_by_location(self):
@@ -44,17 +46,15 @@ class HomePageViewTests(TestCase):
 
     def test_view_map_correct_template(self):
         # test if the 'view_name` maps to the correct template`
-        url = self._generate_reverse_url()
-        resp = self.client.get(reverse(url))
+        resp = self.client.get(reverse(self.reverse_url))
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, self.template_path)
     
     def test_location_match_view(self):
         # test if the `view_name` and `url_location` points to the same view and route
-        url = self._generate_reverse_url()
         resp = self.client.get(self.url_location)
         self.assertTemplateUsed(resp, self.template_path)
-        resp = self.client.get(reverse(url))
+        resp = self.client.get(reverse(self.reverse_url))
         self.assertTemplateUsed(resp, self.template_path)
 
 class AboutPageViewTests(HomePageViewTests):

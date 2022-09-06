@@ -14,4 +14,4 @@ class Post(models.Model):
     body = models.TextField()
 
     def __str__(self):
-        return self.title + '...' if len(self.title)>20 else self.title
+        return self.title

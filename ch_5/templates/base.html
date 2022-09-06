@@ -1,0 +1,12 @@
+{% load static %}
+<head>
+  <link href="{% static 'css/base.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400"
+rel="stylesheet">
+
+</head>
+
+<header>
+  <h1><a href="{% url 'home' %}">Chapter 5</a></h1>
+</header>
+{% block content %}{% endblock content %}
