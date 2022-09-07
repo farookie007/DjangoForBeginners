@@ -55,7 +55,37 @@ class PostModelTests(TestCase):
             self.assertEqual(post.title, self.posts[i]['title'])
             self.assertEqual(post.body, self.posts[i]['body'])
             self.assertEqual(post.author, self.user)
-        
+    
+    def test_get_absolute_url(self):
+        for i, post in enumerate(self.all_posts, 1):
+            self.assertEqual(post.get_absolute_url(), f'/post/{i}/')
+    
+    def test_post_create_view(self):
+        post = {
+            'title': "New Post",
+            'body': "New body",
+            'author': self.user,
+        }
+        response = self.client.post(reverse('post_create'), data=post)
+        self.assertEqual(response.status_code, 200)
+        for field in post.keys():
+            self.assertContains(response, post[field])
+    
+    def test_post_update_view(self):
+        post = {
+            'title': "Updated Title",
+            'body': "Updated body",
+        }
+        response = self.client.post(reverse('post_update', kwargs={'pk': 1}), post)
+        self.assertEqual(response.status_code, 302)
+    
+    def test_post_delete_view(self):
+        response = self.client.post(
+            reverse('post_delete', kwargs={'pk': 1})
+        )
+        self.assertEqual(response.status_code, 302)
+
+
 
 class BlogListViewTests(TestCase):
     app_name = None
