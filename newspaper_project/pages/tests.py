@@ -48,7 +48,6 @@ class SignupPageTests(TestCase, HomePageViewTests):
     
     def setUp(self):
         super().setUp()
-        
         self.payload = {
             'username': self.username,
             'email': self.email,
