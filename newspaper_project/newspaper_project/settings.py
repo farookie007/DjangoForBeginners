@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # user created APPs
+    # local APPs
     "users.apps.UsersConfig",
+    "pages.apps.PagesConfig",
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 AUTH_USER_MODEL = 'users.CustomUser'    # to inform django of our choice to use the `CustomUser` model
+
+
+# login and logout redirects
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
