@@ -5,6 +5,7 @@ from django.urls import reverse
 
 # Create your models here.
 
+
 class Article(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -14,8 +15,34 @@ class Article(models.Model):
         on_delete=models.CASCADE,
     )
 
+    class Meta:
+        ordering = ("-date",)
+
     def __str__(self):
         return self.title
-    
+
     def get_absolute_url(self):
-        return reverse('article_detail', kwargs={'pk': self.pk})
+        return reverse("article_detail", kwargs={"pk": self.pk})
+
+
+class Comment(models.Model):
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.CASCADE,
+        related_name="comments",
+    )
+    comment = models.CharField(max_length=140)
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+    )
+    datetime = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-datetime",)
+
+    def __str__(self):
+        return self.comment
+
+    def get_absolute_url(self):
+        return reverse("article_detail", kwargs={"pk": self.pk})

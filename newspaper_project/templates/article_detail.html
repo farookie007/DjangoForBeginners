@@ -1,12 +1,29 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
 <div class="article-entry">
   <h2>{{ article.title }}</h2>
-  <p>by {{ article.author }} | {{ article.date }}</p>
+  <p>by <span style="color:blue; font-weight:700;">{% if user == article.author %}you{% else %}{{ article.author }}{% endif %}</span> | {{ article.date }}</p>
   <p>{{ article.body }}</p>
 </div>
+{% if user.is_authenticated and user == article.author %}
 <p>
   <a href="{% url 'article_edit' article.pk %}">Edit</a> |
   <a href="{% url 'article_delete' article.pk %}">Delete</a>
 </p>
+{% endif %}
 <p>Back to <a href="{% url 'article_list' %}">All Articles</a>.</p>
+<div class="card-footer">
+  <form action="" method="POST">
+{% csrf_token %}
+{{ form|crispy }}
+<button class="btn btn-success" type="submit">Comment</button>
+</form>
+{% for comment in article.comments.all %}
+<p>
+<span class="font-weight-bold">{% if comment.author == user %}You{% else %}{{ comment.author }}{% endif %} &middot;</span>
+{{ comment.comment }} <span style="color:red; opacity: 0.5; font-size: 0.6em;">{{ comment.datetime }}</span>
+</p>
+{% endfor %}
+</div>
 {% endblock content %}
